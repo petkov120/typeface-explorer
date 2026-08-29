@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>North & Line — specimen</title>
+    <style>
+      :root {
+        --bg: #f4efe6;
+        --ink: #1c1915;
+        --mute: #6a6158;
+        --line: rgba(28, 25, 21, 0.12);
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; background: var(--bg); color: var(--ink); }
+      body {
+        font-family: Georgia, serif;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 40px;
+        border-bottom: 1px solid var(--line);
+        font-family: system-ui, sans-serif;
+        font-size: 13px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      nav a { color: inherit; text-decoration: none; margin-left: 22px; }
+      main { max-width: 760px; margin: 0 auto; padding: 72px 28px 120px; }
+      h1 {
+        font-size: 56px;
+        line-height: 1.05;
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        margin: 0 0 16px;
+      }
+      .lede {
+        font-size: 20px;
+        color: var(--mute);
+        max-width: 28em;
+        margin: 0 0 36px;
+      }
+      h2 { font-size: 28px; margin: 40px 0 10px; letter-spacing: -0.02em; }
+      p { margin: 0 0 14px; max-width: 38em; }
+      ul { margin: 0; padding-left: 1.2em; max-width: 36em; }
+      li { margin: 6px 0; }
+      blockquote {
+        margin: 28px 0;
+        padding: 0 0 0 18px;
+        border-left: 2px solid var(--line);
+        color: var(--mute);
+        font-style: italic;
+      }
+      .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+      article {
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fffdf8;
+      }
+      article h3 { margin: 0 0 6px; font-size: 18px; }
+      article p { font-size: 14px; color: var(--mute); }
+      button {
+        margin-top: 28px;
+        height: 40px;
+        padding: 0 18px;
+        border: 0;
+        border-radius: 8px;
+        background: #1c1915;
+        color: #f4efe6;
+        font: inherit;
+        font-size: 13px;
+      }
+      footer {
+        margin-top: 64px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+        font-family: system-ui, sans-serif;
+        font-size: 12px;
+        color: var(--mute);
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <strong>North & Line</strong>
+      <div>
+        <a href="#">Work</a>
+        <a href="#">Journal</a>
+        <a href="#">Contact</a>
+      </div>
+    </nav>
+    <main>
+      <h1>Type is a material, not a setting.</h1>
+      <p class="lede">
+        Serve this page, enable Typeface Explorer, and try pairings on real copy
+        instead of editing CSS.
+      </p>
+      <h2>A column you can actually read</h2>
+      <p>
+        Hover the heading, then a paragraph, then All text. The point is speed:
+        twenty looks in a minute, one snippet if something peaks.
+      </p>
+      <blockquote>
+        Pairing ignores a single click. It always sets headings and body together.
+      </blockquote>
+      <ul>
+        <li>Headings in a display serif</li>
+        <li>Body in a quiet sans</li>
+        <li>UI labels follow All text, not a pairing</li>
+      </ul>
+      <div class="cards">
+        <article>
+          <h3>Measure</h3>
+          <p>Width is the reading column, in ch. Length is leading.</p>
+        </article>
+        <article>
+          <h3>Size</h3>
+          <p>A single scale on html. The page keeps its own hierarchy.</p>
+        </article>
+      </div>
+      <button type="button">Start a project</button>
+      <footer>Local specimen · not a product site</footer>
+    </main>
+  </body>
+</html>
