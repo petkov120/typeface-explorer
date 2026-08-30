@@ -122,6 +122,12 @@ html.tx-widget-drag * {
   padding: 0;
   border: 0;
   background: linear-gradient(145deg, rgba(255, 155, 74, 0.2), rgba(255, 79, 163, 0.24) 52%, rgba(155, 92, 255, 0.34));
+  cursor: grab !important;
+  touch-action: none;
+}
+
+.tx-panel.is-collapsed .tx-launcher:active {
+  cursor: grabbing !important;
 }
 
 .tx-launcher img {

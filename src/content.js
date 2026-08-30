@@ -26,9 +26,12 @@
     width: 880,
     height: 560,
     parked: false,
-    collapsed: false
+    collapsed: false,
+    launcherLeft: null,
+    launcherTop: null
   };
   var skipClick = false;
+  var suppressLauncherClick = false;
   var listTab = "fonts";
   var tabsEl = null;
   var hierarchyCache = null;
@@ -56,6 +59,8 @@
       if (typeof data.widget.width === "number") widget.width = data.widget.width;
       if (typeof data.widget.height === "number") widget.height = data.widget.height;
       if (typeof data.widget.collapsed === "boolean") widget.collapsed = data.widget.collapsed;
+      if (typeof data.widget.launcherLeft === "number") widget.launcherLeft = data.widget.launcherLeft;
+      if (typeof data.widget.launcherTop === "number") widget.launcherTop = data.widget.launcherTop;
       if (widget.width < 640) widget.width = 880;
       if (widget.height < 420) widget.height = 560;
       widget.parked = widget.left != null && widget.top != null;
@@ -298,6 +303,10 @@
     });
     panel.querySelector(".tx-launcher").addEventListener("click", function (e) {
       e.stopPropagation();
+      if (suppressLauncherClick) {
+        suppressLauncherClick = false;
+        return;
+      }
       openDropdown();
     });
     panel.querySelector(".tx-copy").addEventListener("click", copyCss);
@@ -1472,13 +1481,25 @@
     widget.collapsed = collapsed;
     widget.parked = true;
     if (collapsed) {
-      widget.left = Math.max(8, window.innerWidth - 76);
-      widget.top = Math.max(8, window.innerHeight - 76);
+      if (widget.launcherLeft == null || widget.launcherTop == null) {
+        widget.launcherLeft = Math.max(8, window.innerWidth - 76);
+        widget.launcherTop = Math.max(8, window.innerHeight - 76);
+      }
+      widget.left = widget.launcherLeft;
+      widget.top = widget.launcherTop;
     } else {
-      widget.left = Math.max(8, window.innerWidth - widget.width - 16);
-      widget.top = Math.max(8, window.innerHeight - widget.height - 16);
+      var anchorLeft = widget.launcherLeft == null ? window.innerWidth - 76 : widget.launcherLeft;
+      var anchorTop = widget.launcherTop == null ? window.innerHeight - 76 : widget.launcherTop;
+      widget.left =
+        anchorLeft > window.innerWidth / 2 ? anchorLeft + 60 - widget.width : anchorLeft;
+      widget.top =
+        anchorTop > window.innerHeight / 2 ? anchorTop + 60 - widget.height : anchorTop;
     }
     clampWidget();
+    if (collapsed) {
+      widget.launcherLeft = widget.left;
+      widget.launcherTop = widget.top;
+    }
     applyWidget();
     saveWidget();
     if (collapsed) {
@@ -1521,7 +1542,9 @@
         top: widget.top,
         width: widget.width,
         height: widget.height,
-        collapsed: widget.collapsed
+        collapsed: widget.collapsed,
+        launcherLeft: widget.launcherLeft,
+        launcherTop: widget.launcherTop
       }
     });
   }
@@ -1611,7 +1634,14 @@
         try {
           handle.releasePointerCapture(e.pointerId);
         } catch (err) {}
-        if (moved) skipClick = true;
+        if (moved) {
+          skipClick = true;
+          if (handle.classList.contains("tx-launcher")) {
+            suppressLauncherClick = true;
+            widget.launcherLeft = widget.left;
+            widget.launcherTop = widget.top;
+          }
+        }
         saveWidget();
       }
 
@@ -1623,6 +1653,9 @@
 
     head.addEventListener("pointerdown", function (e) {
       if (e.target.closest(".tx-close, .tx-search, .tx-search-wrap, button, input")) return;
+      startDrag("move", "", e);
+    });
+    panel.querySelector(".tx-launcher").addEventListener("pointerdown", function (e) {
       startDrag("move", "", e);
     });
     panel.querySelectorAll(".tx-rh").forEach(function (node) {
