@@ -290,15 +290,16 @@
 
     panel.querySelector(".tx-close").addEventListener("click", function (e) {
       e.stopPropagation();
-      closeDropdown(true);
+      collapseStudio();
     });
     panel.querySelector(".tx-collapse").addEventListener("click", function (e) {
       e.stopPropagation();
-      setCollapsed(true);
+      collapseStudio();
     });
     panel.querySelector(".tx-launcher").addEventListener("click", function (e) {
       e.stopPropagation();
       setCollapsed(false);
+      openDropdown();
     });
     panel.querySelector(".tx-copy").addEventListener("click", copyCss);
     panel.querySelector(".tx-reset").addEventListener("click", function () {
@@ -1370,7 +1371,9 @@
       ensureRoot();
       ensureRing();
       loadFonts();
+      if (!dropdownOpen) collapseStudio();
     } else {
+      closeDropdown(true);
       hideRing();
     }
   }
@@ -1470,6 +1473,13 @@
   function setCollapsed(collapsed) {
     widget.collapsed = collapsed;
     widget.parked = true;
+    if (collapsed) {
+      widget.left = Math.max(8, window.innerWidth - 76);
+      widget.top = Math.max(8, window.innerHeight - 76);
+    } else {
+      widget.left = Math.max(8, window.innerWidth - widget.width - 16);
+      widget.top = Math.max(8, window.innerHeight - widget.height - 16);
+    }
     clampWidget();
     applyWidget();
     saveWidget();
@@ -1483,13 +1493,27 @@
     }
   }
 
+  function collapseStudio() {
+    dropdownOpen = false;
+    preview = null;
+    paint();
+    setCollapsed(true);
+    if (panel) panel.classList.add("is-open");
+  }
+
   function clampWidget() {
     var minW = 640;
     var minH = 420;
     widget.width = Math.min(Math.max(minW, widget.width), Math.max(minW, window.innerWidth - 16));
     widget.height = Math.min(Math.max(minH, widget.height), Math.max(minH, window.innerHeight - 16));
-    widget.left = Math.min(Math.max(8, widget.left), window.innerWidth - 64);
-    widget.top = Math.min(Math.max(8, widget.top), window.innerHeight - 48);
+    widget.left = Math.min(
+      Math.max(8, widget.left),
+      Math.max(8, window.innerWidth - (widget.collapsed ? 68 : widget.width + 8))
+    );
+    widget.top = Math.min(
+      Math.max(8, widget.top),
+      Math.max(8, window.innerHeight - (widget.collapsed ? 68 : widget.height + 8))
+    );
   }
 
   function saveWidget() {
@@ -1703,7 +1727,7 @@
     if (e.key === "Escape") {
       if (dropdownOpen) {
         e.preventDefault();
-        closeDropdown(true);
+        collapseStudio();
       } else if (pickerOn) {
         setPicker(false);
       }
