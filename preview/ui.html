@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Typeface Explorer — UI preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../src/content.css" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #ececec;
+        font-family: "Inter", system-ui, sans-serif;
+      }
+
+      .canvas {
+        padding: 80px 56px;
+      }
+
+      .block {
+        position: relative;
+        display: inline-block;
+        color: #111;
+      }
+
+      .block strong {
+        display: block;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 1.25;
+      }
+
+      .block span {
+        display: block;
+        margin-top: 2px;
+        font-size: 13px;
+        font-weight: 400;
+        color: #8a8a8a;
+        line-height: 1.3;
+      }
+
+      .tx-ring.is-preview {
+        position: absolute;
+        inset: -2px;
+        width: auto;
+        height: auto;
+        opacity: 1;
+      }
+
+      .tx-panel.is-open {
+        left: 56px;
+        top: 180px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="canvas">
+      <div class="block">
+        <strong>Sarah Adams</strong>
+        <span>64F · No local package</span>
+        <div class="tx-ring is-on is-preview">
+          <span class="tx-handle tx-handle-nw"></span>
+          <span class="tx-handle tx-handle-ne"></span>
+          <span class="tx-handle tx-handle-sw"></span>
+          <span class="tx-handle tx-handle-se"></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="tx-explorer-panel" class="tx-panel is-open" style="display: flex">
+      <div class="tx-head">
+        <button type="button" class="tx-close" aria-label="Close">×</button>
+        <div class="tx-drag">
+          <img class="tx-brand-icon" src="../icons/icon32.png" alt="" />
+          <div class="tx-mark">Typeface</div>
+        </div>
+        <div class="tx-search-wrap">
+          <input class="tx-search" placeholder="Search pairings" />
+        </div>
+        <div class="tx-sub">Move · resize</div>
+      </div>
+      <div class="tx-shell">
+        <aside class="tx-side">
+          <div class="tx-tabs">
+            <button type="button" data-tab="fonts">Fonts</button>
+            <button type="button" data-tab="pairs" class="is-on">Pairings</button>
+          </div>
+          <div class="tx-scroll">
+            <div class="tx-pane" data-pane="fonts">
+              <div class="tx-fonts"></div>
+            </div>
+            <div class="tx-pane is-on" data-pane="pairs">
+              <div class="tx-pairs">
+                <button type="button" class="tx-row tx-pair-row is-active is-fit">
+                  <span class="tx-pair-h" style="font-family: Newsreader, Georgia, serif">Newsreader</span>
+                  <span class="tx-pair-b" style="font-family: Geist, system-ui, sans-serif">Geist</span>
+                  <span class="tx-pair-note is-fit">Fits this page · Literary heading, product body</span>
+                </button>
+                <button type="button" class="tx-row tx-pair-row">
+                  <span class="tx-pair-h" style="font-family: Fraunces, Georgia, serif">Fraunces</span>
+                  <span class="tx-pair-b" style="font-family: Inter, system-ui, sans-serif">Inter</span>
+                  <span class="tx-pair-note">Soft display, clean UI</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="tx-side-meta">
+            <span class="tx-hier-cue">Display 28px / Body 15px · serif + sans</span>
+            <span class="tx-count">28 families</span>
+          </div>
+        </aside>
+        <section class="tx-inspector">
+          <div class="tx-sec-label">Apply to</div>
+          <div class="tx-scope">
+            <button type="button" class="is-on">This</button>
+            <button type="button">H1</button>
+            <button type="button">Headings</button>
+            <button type="button">Paragraphs</button>
+            <button type="button">All text</button>
+          </div>
+          <div class="tx-sec-label">Text</div>
+          <div class="tx-knobs">
+            <label class="tx-knob"><span>Size</span><input class="tx-slider" type="range" min="10" max="72" value="16" /><em>16px</em></label>
+            <label class="tx-knob"><span>Leading</span><input class="tx-slider" type="range" min="100" max="200" value="145" /><em>1.45</em></label>
+            <label class="tx-knob"><span>Tracking</span><input class="tx-slider" type="range" min="-50" max="200" value="0" /><em>0</em></label>
+          </div>
+          <div class="tx-weight-ui" data-weight-ui="pair">
+            <div class="tx-sec-label">Display weight</div>
+            <div class="tx-chips tx-weight-chips">
+              <button type="button" style="font-weight:300">Light</button>
+              <button type="button" style="font-weight:400">Reg</button>
+              <button type="button" style="font-weight:500">Med</button>
+              <button type="button" class="is-on" style="font-weight:600">Semi</button>
+              <button type="button" style="font-weight:700">Bold</button>
+              <button type="button" style="font-weight:800">Extra</button>
+            </div>
+            <div class="tx-sec-label">Body weight</div>
+            <div class="tx-chips tx-weight-chips">
+              <button type="button" style="font-weight:300">Light</button>
+              <button type="button" class="is-on" style="font-weight:400">Reg</button>
+              <button type="button" style="font-weight:500">Med</button>
+              <button type="button" style="font-weight:600">Semi</button>
+              <button type="button" style="font-weight:700">Bold</button>
+              <button type="button" style="font-weight:800">Extra</button>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="tx-dock">
+        <div class="tx-actions">
+          <button type="button" class="tx-copy">Copy CSS</button>
+          <button type="button" class="tx-reset">Reset</button>
+        </div>
+      </div>
+      <span class="tx-rh" data-dir="nw"></span>
+      <span class="tx-rh" data-dir="n"></span>
+      <span class="tx-rh" data-dir="ne"></span>
+      <span class="tx-rh" data-dir="e"></span>
+      <span class="tx-rh" data-dir="se"></span>
+      <span class="tx-rh" data-dir="s"></span>
+      <span class="tx-rh" data-dir="sw"></span>
+      <span class="tx-rh" data-dir="w"></span>
+    </div>
+  </body>
+</html>
