@@ -298,7 +298,6 @@
     });
     panel.querySelector(".tx-launcher").addEventListener("click", function (e) {
       e.stopPropagation();
-      setCollapsed(false);
       openDropdown();
     });
     panel.querySelector(".tx-copy").addEventListener("click", copyCss);
@@ -1371,7 +1370,6 @@
       ensureRoot();
       ensureRing();
       loadFonts();
-      if (!dropdownOpen) collapseStudio();
     } else {
       closeDropdown(true);
       hideRing();
@@ -1666,6 +1664,7 @@
   function openDropdown() {
     hierarchyCache = null;
     ensureRoot();
+    if (widget.collapsed) setCollapsed(false);
     dropdownOpen = true;
     query = "";
     activeIndex = 0;
