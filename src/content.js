@@ -1515,6 +1515,7 @@
   function collapseStudio() {
     dropdownOpen = false;
     preview = null;
+    document.documentElement.classList.remove("tx-explorer-on");
     paint();
     setCollapsed(true);
     if (panel) panel.classList.add("is-open");
@@ -1698,6 +1699,7 @@
     hierarchyCache = null;
     ensureRoot();
     if (widget.collapsed) setCollapsed(false);
+    if (pickerOn) document.documentElement.classList.add("tx-explorer-on");
     dropdownOpen = true;
     query = "";
     activeIndex = 0;
@@ -1728,8 +1730,12 @@
     }
   }
 
+  function launcherVisible() {
+    return !!(widget.collapsed && panel && panel.classList.contains("is-open"));
+  }
+
   function onMove(e) {
-    if (!pickerOn || dropdownOpen) return;
+    if (!pickerOn || dropdownOpen || launcherVisible()) return;
     var raw = fromPoint(e.clientX, e.clientY);
     var el = pickTarget(raw);
     hoverEl = el;
@@ -1738,6 +1744,7 @@
 
   function onClick(e) {
     if (!pickerOn) return;
+    if (launcherVisible()) return;
     if (skipClick) {
       skipClick = false;
       return;
