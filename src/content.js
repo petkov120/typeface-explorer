@@ -25,7 +25,8 @@
     top: null,
     width: 880,
     height: 560,
-    parked: false
+    parked: false,
+    collapsed: false
   };
   var skipClick = false;
   var listTab = "fonts";
@@ -54,6 +55,7 @@
       if (typeof data.widget.top === "number") widget.top = data.widget.top;
       if (typeof data.widget.width === "number") widget.width = data.widget.width;
       if (typeof data.widget.height === "number") widget.height = data.widget.height;
+      if (typeof data.widget.collapsed === "boolean") widget.collapsed = data.widget.collapsed;
       if (widget.width < 640) widget.width = 880;
       if (widget.height < 420) widget.height = 560;
       widget.parked = widget.left != null && widget.top != null;
@@ -193,13 +195,16 @@
     panel.style.position = "fixed";
     panel.style.zIndex = "2147483646";
     panel.innerHTML =
+      '<button type="button" class="tx-launcher" aria-label="Expand Typeface Explorer" title="Open Typeface Explorer"><img src="' +
+      chrome.runtime.getURL("icons/icon32.png") +
+      '" alt=""></button>' +
       '<div class="tx-head">' +
       '<button type="button" class="tx-close" aria-label="Close">×</button>' +
       '<div class="tx-drag"><img class="tx-brand-icon" src="' +
       chrome.runtime.getURL("icons/icon32.png") +
       '" alt=""><div class="tx-mark">Typeface</div></div>' +
       '<div class="tx-search-wrap"><input class="tx-search" type="search" placeholder="Search faces" autocomplete="off" spellcheck="false"></div>' +
-      '<div class="tx-sub">Move · resize</div>' +
+      '<div class="tx-window-actions"><span class="tx-move-cue" title="Drag to move" aria-hidden="true">✥</span><button type="button" class="tx-collapse" aria-label="Collapse studio" title="Collapse">−</button></div>' +
       "</div>" +
       '<div class="tx-shell">' +
       '<aside class="tx-side">' +
@@ -239,7 +244,7 @@
       '<span class="tx-rh" data-dir="n"></span>' +
       '<span class="tx-rh" data-dir="ne"></span>' +
       '<span class="tx-rh" data-dir="e"></span>' +
-      '<span class="tx-rh" data-dir="se"></span>' +
+      '<span class="tx-rh tx-resize-cue" data-dir="se" title="Drag to resize" aria-hidden="true"></span>' +
       '<span class="tx-rh" data-dir="s"></span>' +
       '<span class="tx-rh" data-dir="sw"></span>' +
       '<span class="tx-rh" data-dir="w"></span>';
@@ -286,6 +291,14 @@
     panel.querySelector(".tx-close").addEventListener("click", function (e) {
       e.stopPropagation();
       closeDropdown(true);
+    });
+    panel.querySelector(".tx-collapse").addEventListener("click", function (e) {
+      e.stopPropagation();
+      setCollapsed(true);
+    });
+    panel.querySelector(".tx-launcher").addEventListener("click", function (e) {
+      e.stopPropagation();
+      setCollapsed(false);
     });
     panel.querySelector(".tx-copy").addEventListener("click", copyCss);
     panel.querySelector(".tx-reset").addEventListener("click", function () {
@@ -1447,10 +1460,27 @@
 
   function applyWidget() {
     if (!panel) return;
+    panel.classList.toggle("is-collapsed", widget.collapsed);
     panel.style.left = widget.left + "px";
     panel.style.top = widget.top + "px";
-    panel.style.width = widget.width + "px";
-    panel.style.height = widget.height + "px";
+    panel.style.width = (widget.collapsed ? 60 : widget.width) + "px";
+    panel.style.height = (widget.collapsed ? 60 : widget.height) + "px";
+  }
+
+  function setCollapsed(collapsed) {
+    widget.collapsed = collapsed;
+    widget.parked = true;
+    clampWidget();
+    applyWidget();
+    saveWidget();
+    if (collapsed) {
+      hideRing();
+    } else {
+      placeRing(bound);
+      setTimeout(function () {
+        if (searchInput) searchInput.focus();
+      }, 0);
+    }
   }
 
   function clampWidget() {
@@ -1468,7 +1498,8 @@
         left: widget.left,
         top: widget.top,
         width: widget.width,
-        height: widget.height
+        height: widget.height,
+        collapsed: widget.collapsed
       }
     });
   }
@@ -1574,6 +1605,7 @@
     });
     panel.querySelectorAll(".tx-rh").forEach(function (node) {
       node.addEventListener("pointerdown", function (e) {
+        if (widget.collapsed) return;
         startDrag("resize", node.getAttribute("data-dir"), e);
       });
     });
@@ -1623,9 +1655,11 @@
     placeRing(bound);
     loadFonts();
     previewActive();
-    setTimeout(function () {
-      searchInput.focus();
-    }, 0);
+    if (!widget.collapsed) {
+      setTimeout(function () {
+        searchInput.focus();
+      }, 0);
+    }
   }
 
   function closeDropdown(dropPreview) {
