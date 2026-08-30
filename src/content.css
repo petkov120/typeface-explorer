@@ -58,9 +58,77 @@ html.tx-widget-drag * {
 #tx-explorer-panel .tx-reset,
 #tx-explorer-panel .tx-slider,
 #tx-explorer-panel .tx-close,
+#tx-explorer-panel .tx-collapse,
+#tx-explorer-panel .tx-launcher,
 #tx-explorer-panel .tx-chips button,
 #tx-explorer-panel .tx-units button {
   cursor: pointer !important;
+}
+
+.tx-launcher {
+  display: none;
+}
+
+.tx-window-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.tx-move-cue {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  color: var(--tx-muted, #b9a9c4);
+  font-size: 16px;
+  cursor: grab !important;
+}
+
+.tx-collapse {
+  width: 28px;
+  height: 28px;
+  padding: 0 0 3px;
+  border: 1px solid var(--tx-line, rgba(238, 217, 255, 0.14));
+  border-radius: 8px;
+  background: var(--tx-glass, rgba(255, 255, 255, 0.045));
+  color: var(--tx-ink, #fff8ff);
+  font: 18px/1 ui-sans-serif, system-ui, sans-serif;
+}
+
+.tx-collapse:hover {
+  border-color: rgba(182, 108, 255, 0.55);
+  background: rgba(155, 92, 255, 0.16);
+}
+
+.tx-panel.is-collapsed {
+  min-width: 60px;
+  min-height: 60px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 14px 38px rgba(26, 2, 40, 0.52), 0 0 28px rgba(178, 74, 255, 0.2);
+}
+
+.tx-panel.is-collapsed > :not(.tx-launcher) {
+  display: none !important;
+}
+
+.tx-panel.is-collapsed .tx-launcher {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: linear-gradient(145deg, rgba(255, 155, 74, 0.2), rgba(255, 79, 163, 0.24) 52%, rgba(155, 92, 255, 0.34));
+}
+
+.tx-launcher img {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.28));
 }
 
 #tx-root {
@@ -589,6 +657,27 @@ html.tx-widget-drag * {
   left: 0;
   transform: translate(-50%, -50%);
   cursor: ew-resize;
+}
+
+.tx-rh.tx-resize-cue {
+  width: 30px;
+  height: 30px;
+  transform: none;
+}
+
+.tx-rh.tx-resize-cue::after {
+  top: auto;
+  left: auto;
+  right: 6px;
+  bottom: 6px;
+  width: 13px;
+  height: 13px;
+  transform: none;
+  border: 0;
+  background:
+    linear-gradient(135deg, transparent 42%, #d9bbff 43%, #d9bbff 51%, transparent 52%) 4px 4px / 9px 9px no-repeat,
+    linear-gradient(135deg, transparent 42%, #9b5cff 43%, #9b5cff 51%, transparent 52%) 0 0 / 13px 13px no-repeat;
+  box-shadow: none;
 }
 
 /* Gradient brand skin */
