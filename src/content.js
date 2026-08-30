@@ -3,7 +3,7 @@
   window.__txExplorer = true;
 
   var STYLE_ID = "tx-explorer-style";
-  var FONT_ID = "tx-explorer-fonts";
+  var loadedFonts = {};
   var ROOT_ID = "tx-root";
 
   var pickerOn = false;
@@ -1003,13 +1003,11 @@
   }
 
   function headingSelector() {
-    if (document.querySelector('[data-tx-role="heading"]')) return '[data-tx-role="heading"]';
-    return TX_HEADING_SELECTOR;
+    return '[data-tx-role="heading"], ' + TX_HEADING_SELECTOR;
   }
 
   function bodySelector() {
-    if (document.querySelector('[data-tx-role="body"]')) return '[data-tx-role="body"]';
-    return TX_BODY_SELECTOR;
+    return '[data-tx-role="body"], ' + TX_BODY_SELECTOR;
   }
 
   function allTextSelector() {
@@ -1109,27 +1107,23 @@
     Object.keys(view.elements).forEach(function (k) {
       list.push(view.elements[k]);
     });
-    if (dropdownOpen) {
-      TX_FONTS.forEach(function (f) {
-        list.push(f.family);
-      });
-    }
     return list;
   }
 
   function loadFonts(extra) {
     var view = mergedView();
     var families = familiesInUse(view).concat(extra || []);
-    var href = txGoogleFontsUrl(families);
-    if (!href) return;
-    var el = document.getElementById(FONT_ID);
-    if (!el) {
-      el = document.createElement("link");
-      el.id = FONT_ID;
+    families.forEach(function (family) {
+      if (!family || loadedFonts[family]) return;
+      var href = txGoogleFontsUrl([family]);
+      if (!href) return;
+      loadedFonts[family] = true;
+      var el = document.createElement("link");
       el.rel = "stylesheet";
+      el.setAttribute("data-tx-font-link", family);
+      el.setAttribute("href", href);
       document.documentElement.appendChild(el);
-    }
-    if (el.getAttribute("href") !== href) el.setAttribute("href", href);
+    });
   }
 
   function rule(selector, body) {
@@ -1346,8 +1340,10 @@
     });
     var style = document.getElementById(STYLE_ID);
     if (style) style.remove();
-    var fonts = document.getElementById(FONT_ID);
-    if (fonts) fonts.remove();
+    document.querySelectorAll("[data-tx-font-link]").forEach(function (fontLink) {
+      fontLink.remove();
+    });
+    loadedFonts = {};
     syncKnobs();
     updateMeta();
     renderLists();
