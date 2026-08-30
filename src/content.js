@@ -1699,7 +1699,7 @@
     hierarchyCache = null;
     ensureRoot();
     if (widget.collapsed) setCollapsed(false);
-    if (pickerOn) document.documentElement.classList.add("tx-explorer-on");
+    document.documentElement.classList.remove("tx-explorer-on");
     dropdownOpen = true;
     query = "";
     activeIndex = 0;
